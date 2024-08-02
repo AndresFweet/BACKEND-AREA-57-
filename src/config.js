@@ -1,0 +1,9 @@
+export const PORT = process.env.PORT
+//variables globales para la conexionBD
+export const USERNAME_DATABASE = process.env.USERNAME_DATABASE
+export const HOST_DATABASE = process.env.HOST_DATABASE
+export const PASSWORD_DATABASE = process.env.PASSWORD_DATABASE
+export const DATA_BASE = process.env.DATA_BASE
+export const PORT_DATABASE = process.env.PORT_DATABASE
+//variables globales para el token
+export const TOKEN_SECRET = process.env.TOKEN_SECRET
