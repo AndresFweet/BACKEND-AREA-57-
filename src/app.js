@@ -8,6 +8,10 @@ import path from "path";
 import fs from "fs";
 import multer from "multer";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+// Cargar variables de entorno desde el archivo .env
+dotenv.config();
 
 // Importar rutas
 import authRoutes from "./routes/auth/auth.routes.js";
@@ -22,7 +26,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Origen permitido para socket.io
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Origen permitido para socket.io
     methods: ["GET", "POST"],
   },
 });
@@ -33,7 +37,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 // Configura CORS para Express
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -93,7 +97,6 @@ app.post('/save-recording', upload.single('video'), (req, res) => {
 
 // Configuración de socket.io
 io.on("connection", (socket) => {
-
   socket.on("video-frame", (image) => {
     socket.broadcast.emit("video-stream", image);
   });
@@ -120,8 +123,11 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000, () => {
-  console.log("Server is running on http://localhost:5000");
+// Usa el puerto de la variable de entorno o un valor por defecto
+const port = process.env.PORTLIVE || 5000;
+
+server.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
 
 export default app;
