@@ -16,6 +16,7 @@ dotenv.config();
 // Importar rutas
 import authRoutes from "./routes/auth/auth.routes.js";
 import newRoutes from "./routes/config/new.routes.js";
+import liveRoutes from "./routes/config/live.routes.js"
 
 // Necesario para resolver __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -54,7 +55,7 @@ app.use(cookieParser());
 // Sección para utilizar las rutas importadas
 app.use("/api", authRoutes);
 app.use("/api", newRoutes);
-
+app.use("/api", liveRoutes)
 // Configuración de multer para manejar archivos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

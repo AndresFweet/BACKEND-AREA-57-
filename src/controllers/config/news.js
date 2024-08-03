@@ -79,7 +79,7 @@ export const createNewRequest = async (req, res) => {
 
 export const getNewsRandom = async (req, res) => {
   try {
-    // Consulta para obtener las noticias
+    // Consulta para obtener las noticias 
     const resultsFound = await pool.query(`SELECT * FROM work.cfg_news
     ORDER BY RANDOM()
     LIMIT 2;`);
