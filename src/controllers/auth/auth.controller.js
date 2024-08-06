@@ -46,7 +46,6 @@ export const signin = async (req, res) => {
       idRol: resultFound.rows[0].id_rol,
       email: resultFound.rows[0].email,
     });
-    console.log(resultFound.rows);
   } catch (error) {
     return res.status(500).json(error.message);
   }

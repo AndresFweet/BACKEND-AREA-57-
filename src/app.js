@@ -17,6 +17,8 @@ dotenv.config();
 import authRoutes from "./routes/auth/auth.routes.js";
 import newRoutes from "./routes/config/new.routes.js";
 import liveRoutes from "./routes/config/live.routes.js"
+import interviewRoutes from "./routes/config/interview.routes.js"
+import preRecordRoutes from './routes/config/prerRecord.routes.js'
 
 // Necesario para resolver __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +58,8 @@ app.use(cookieParser());
 app.use("/api", authRoutes);
 app.use("/api", newRoutes);
 app.use("/api", liveRoutes)
+app.use("/api", interviewRoutes)
+app.use("/api", preRecordRoutes)
 // Configuración de multer para manejar archivos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -120,7 +124,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    //console.log("user disconnected");
   });
 });
 

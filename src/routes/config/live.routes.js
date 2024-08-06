@@ -1,14 +1,23 @@
 import { Router } from "express";
 
-import { authRequired } from '../../middlewares/validateToken.js'
+import { authRequired } from "../../middlewares/validateToken.js";
 
 //controllers
-import { createLiveRequest, getPartidosLive } from "../../controllers/config/live.js"
+import {
+  createLiveRequest,
+  getPartidosLive,
+  getTotalStreemRequest,
+  getStreemDateRequest
+} from "../../controllers/config/live.js";
 
 const router = Router();
 
 router.post("/config/liveStatic", authRequired, createLiveRequest);
 
-router.get("/config/getLiveStatic", getPartidosLive)
+router.get("/config/getLiveStatic", getPartidosLive);
 
-export default router
+router.get("/config/getTotalStreem", getTotalStreemRequest);
+
+router.get("/config/getStreemsForDate/:date", getStreemDateRequest)
+
+export default router;
