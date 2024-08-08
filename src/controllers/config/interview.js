@@ -47,7 +47,7 @@ export const getInteviewRequest = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que el primer archivo en la carpeta es el video que necesitas
             const firstVideoFile = files[0];
-            videoUrl = `https://localhost:4000/uploads/streem/${folderName}/${firstVideoFile}`;
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
           }
         } catch (err) {
           console.error(`Error al leer la carpeta de videos para el ID ${id}:`, err);
@@ -105,7 +105,7 @@ export const getTotalStreemRequest = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que el primer video en la carpeta es el que necesitas
             const firstVideoFile = files[0];
-            videoUrl = `https://localhost:4000/uploads/streem/${folderName}/${firstVideoFile}`;
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
           }
         } catch (err) {
           console.error(
@@ -166,7 +166,7 @@ export const getInterviewsDateRequest = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que el primer video en la carpeta es el que necesitas
             const firstVideoFile = files[0];
-            videoUrl = `https://localhost:4000/uploads/streem/${folderName}/${firstVideoFile}`;
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
           }
         } catch (err) {
           console.error(
