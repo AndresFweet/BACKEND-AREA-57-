@@ -1,25 +1,24 @@
-import express from 'express';
-import http from 'http';
-import https from 'https';
-import fs from 'fs';
-import { Server } from 'socket.io';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import path from 'path';
-import multer from 'multer';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
+import fs from "fs";
+import multer from "multer";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
 // Importar rutas
-import authRoutes from './routes/auth/auth.routes.js';
-import newRoutes from './routes/config/new.routes.js';
-import liveRoutes from './routes/config/live.routes.js';
-import interviewRoutes from './routes/config/interview.routes.js';
-import preRecordRoutes from './routes/config/prerRecord.routes.js';
+import authRoutes from "./routes/auth/auth.routes.js";
+import newRoutes from "./routes/config/new.routes.js";
+import liveRoutes from "./routes/config/live.routes.js"
+import interviewRoutes from "./routes/config/interview.routes.js"
+import preRecordRoutes from './routes/config/prerRecord.routes.js'
 
 // Necesario para resolver __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -27,9 +26,16 @@ const __dirname = path.dirname(__filename);
 
 // Inicialización Express
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL, // Origen permitido para socket.io
+    methods: ["GET", "POST"],
+  },
+});
 
 // Configuración para servir archivos estáticos desde la carpeta 'uploads'
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Configura CORS para Express
 app.use(
@@ -40,7 +46,7 @@ app.use(
 );
 
 // Módulo para visualizar las peticiones al backend
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 // Módulo para trabajar las peticiones en formato JSON
 app.use(express.json());
@@ -49,12 +55,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Sección para utilizar las rutas importadas
-app.use('/api', authRoutes);
-app.use('/api', newRoutes);
-app.use('/api', liveRoutes);
-app.use('/api', interviewRoutes);
-app.use('/api', preRecordRoutes);
-
+app.use("/api", authRoutes);
+app.use("/api", newRoutes);
+app.use("/api", liveRoutes)
+app.use("/api", interviewRoutes)
+app.use("/api", preRecordRoutes)
 // Configuración de multer para manejar archivos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -96,67 +101,38 @@ app.post('/save-recording', upload.single('video'), (req, res) => {
 });
 
 // Configuración de socket.io
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL, // Origen permitido para socket.io
-    methods: ['GET', 'POST'],
-  },
-});
-
-io.on('connection', (socket) => {
-  socket.on('video-frame', (image) => {
-    socket.broadcast.emit('video-stream', image);
+io.on("connection", (socket) => {
+  socket.on("video-frame", (image) => {
+    socket.broadcast.emit("video-stream", image);
   });
 
-  socket.on('audio-stream', (audioData) => {
-    socket.broadcast.emit('audio-stream', audioData);
+  socket.on("audio-stream", (audioData) => {
+    socket.broadcast.emit("audio-stream", audioData);
   });
 
-  socket.on('counter-update', (counter) => {
-    socket.broadcast.emit('counter-update', counter);
+  socket.on("counter-update", (counter) => {
+    socket.broadcast.emit("counter-update", counter);
   });
 
-  socket.on('marker-update', (marker) => {
-    socket.broadcast.emit('marker-update', marker);
+  socket.on("marker-update", (marker) => {
+    socket.broadcast.emit("marker-update", marker);
   });
 
-  socket.on('team-update', (teams) => {
+  socket.on("team-update", (teams) => {
     const { teamA, teamB } = teams;
-    socket.broadcast.emit('team-update', { teamA, teamB });
+    socket.broadcast.emit("team-update", { teamA, teamB });
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     //console.log("user disconnected");
   });
 });
-
-// Configuración del servidor dependiendo del entorno
-let server;
-if (process.env.NODE_ENV === 'production') {
-  const privateKey = fs.readFileSync('/path/to/your/privkey.pem', 'utf8');
-  const certificate = fs.readFileSync('/path/to/your/cert.pem', 'utf8');
-  const ca = fs.readFileSync('/path/to/your/chain.pem', 'utf8');
-
-  const credentials = {
-    key: privateKey,
-    cert: certificate,
-    ca: ca,
-  };
-
-  server = https.createServer(credentials, app);
-} else {
-  server = http.createServer(app);
-}
 
 // Usa el puerto de la variable de entorno o un valor por defecto
 const port = process.env.PORTLIVE || 5000;
 
 server.listen(port, () => {
-  console.log(
-    `Server is running on ${
-      process.env.NODE_ENV === 'production' ? 'https' : 'http'
-    }://localhost:${port}`
-  );
+  console.log(`Server is running on http://localhost:${port}`);
 });
 
 export default app;
