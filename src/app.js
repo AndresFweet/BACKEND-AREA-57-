@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
+import multer from 'multer';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
