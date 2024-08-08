@@ -46,7 +46,7 @@ export const getRecordedRequest = async (req, res) => {
               if (files.length > 0) {
                 // Suponiendo que el primer video en la carpeta es el que necesitas
                 const firstVideoFile = files[0];
-                videoUrl = `http://localhost:4000/uploads/streem/${folderName}/${firstVideoFile}`;
+                videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
               }
             } catch (err) {
               console.error(

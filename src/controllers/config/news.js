@@ -110,7 +110,7 @@ export const getNewsRandom = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que la primera imagen en la carpeta es la que necesitas
             const firstImageFile = files[0];
-            imageUrl = `http://localhost:4000/uploads/${folderName}/${firstImageFile}`;
+            imageUrl = `${process.env.FRONTEND_URL}/uploads/${folderName}/${firstImageFile}`;
           }
         } catch (err) {
           console.error(
@@ -167,7 +167,7 @@ export const gwtNewsRecents = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que la primera imagen en la carpeta es la que necesitas
             const firstImageFile = files[0];
-            imageUrl = `http://localhost:4000/uploads/${folderName}/${firstImageFile}`;
+            imageUrl = `${process.env.FRONTEND_URL}/uploads/${folderName}/${firstImageFile}`;
           }
         } catch (err) {
           console.error(
@@ -225,7 +225,7 @@ export const getNewRequest = async (req, res) => {
 
           if (files.length > 0) {
             mediaUrls = files.map(
-              (file) => `http://localhost:4000/uploads/${folderName}/${file}`
+              (file) => `${process.env.FRONTEND_URL}/uploads/${folderName}/${file}`
             );
           }
         } catch (err) {
@@ -294,7 +294,7 @@ export const getTotalNewRequest = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que la primera imagen en la carpeta es la que necesitas
             const firstImageFile = files[0];
-            imageUrl = `http://localhost:4000/uploads/${folderName}/${firstImageFile}`;
+            imageUrl = `${process.env.FRONTEND_URL}/uploads/${folderName}/${firstImageFile}`;
           }
         } catch (err) {
           console.error(
@@ -352,7 +352,7 @@ export const getNewsDate = async (req, res) => {
 
           if (files.length > 0) {
             // Suponiendo que solo hay una imagen por noticia
-            imageUrl = `http://localhost:4000/uploads/${folderName}/${files[0]}`;
+            imageUrl = `${process.env.FRONTEND_URL}/uploads/${folderName}/${files[0]}`;
           }
         } catch (err) {
           console.error(
