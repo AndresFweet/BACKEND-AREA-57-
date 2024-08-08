@@ -29,7 +29,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Origen permitido para socket.io
+    origin: process.env.FRONTEND_URL, // Origen permitido para socket.io
     methods: ["GET", "POST"],
   },
 });
@@ -40,7 +40,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 // Configura CORS para Express
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );

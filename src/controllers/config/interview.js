@@ -36,7 +36,7 @@ export const getInteviewRequest = async (req, res) => {
         const { id, date_create } = video;
         const dateFormatted = date_create.toISOString().slice(0, 10); // Formato: aaaa-mm-dd
         const folderName = `${id}_${dateFormatted}`;
-        const videosFolderPath = path.join(__dirname, '../../..', 'uploads', 'streem', folderName); // 'uploads/streem' está en la raíz
+        const videosFolderPath = path.join(__dirname, '../../../', 'uploads', 'streem', folderName); // 'uploads/streem' está en la raíz
   
         let videoUrl = null;
   
