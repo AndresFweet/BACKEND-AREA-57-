@@ -27,12 +27,14 @@ export const createLiveRequest = async (req, res) => {
         return res.status(400).json({ message: "No se recibieron archivos." });
       }
 
+      const fecha = new Date ()
+
       const result = await pool.query(
         `INSERT INTO work.cfg_transmision_manual
               (id_tipo, title, descripcion,  id_user, date_create, date_update, estatus)
               VALUES ($1, $2, $3, $4, $5, $6, $7)
               RETURNING id, date_create`,
-        [id_tipo, title, description, req.user.id, new Date(), new Date(), true]
+        [id_tipo, title, description, req.user.id, fecha, fecha, true]
       );
 
       const { id, date_create } = result.rows[0];

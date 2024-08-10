@@ -25,7 +25,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Inicialización Express
-const app = express();
+const app = express();  
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -103,30 +103,20 @@ app.post('/save-recording', upload.single('video'), (req, res) => {
 // Configuración de socket.io
 io.on("connection", (socket) => {
   socket.on("video-frame", (image) => {
+    // Retransmite la imagen a todos los demás clientes
     socket.broadcast.emit("video-stream", image);
   });
 
   socket.on("audio-stream", (audioData) => {
+    // Retransmite los datos de audio a todos los demás clientes
     socket.broadcast.emit("audio-stream", audioData);
   });
 
-  socket.on("counter-update", (counter) => {
-    socket.broadcast.emit("counter-update", counter);
-  });
-
-  socket.on("marker-update", (marker) => {
-    socket.broadcast.emit("marker-update", marker);
-  });
-
-  socket.on("team-update", (teams) => {
-    const { teamA, teamB } = teams;
-    socket.broadcast.emit("team-update", { teamA, teamB });
-  });
-
   socket.on("disconnect", () => {
-    //console.log("user disconnected");
+    console.log("User disconnected");
   });
 });
+
 
 // Usa el puerto de la variable de entorno o un valor por defecto
 const port = process.env.PORTLIVE || 5000;
