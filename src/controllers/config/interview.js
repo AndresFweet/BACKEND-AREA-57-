@@ -22,7 +22,7 @@ export const getInteviewRequest = async (req, res) => {
                tm.estatus
         FROM work.cfg_transmision_manual tm
         JOIN work.ref_tipo_transmision_manual ttm ON ttm.id = tm.id_tipo
-        WHERE tm.id_tipo = 1
+        WHERE tm.id_tipo = 1 AND tm.estatus = true
         ORDER BY tm.date_create DESC
         LIMIT 3;
       `);
@@ -74,8 +74,8 @@ export const getTotalStreemRequest = async (req, res) => {
     const today = new Date().toISOString().split('T')[0]; // Obtener la fecha actual en formato YYYY-MM-DD
 
     const resultsFound = await pool.query(
-      `SELECT * FROM work.cfg_transmision_manual WHERE DATE(date_create) = $1 AND id_tipo = $2`,
-      [today, 1]
+      `SELECT * FROM work.cfg_transmision_manual WHERE DATE(date_create) = $1 AND id_tipo = $2 AND estatus = $3`,
+      [today, 1, true]
     );
 
     if (resultsFound.rows.length <= 0) {
@@ -137,7 +137,7 @@ export const getInterviewsDateRequest = async (req, res) => {
     const resultsFound = await pool.query(
       `SELECT * FROM work.cfg_transmision_manual 
         WHERE date_create::date = $1::date
-        AND id_tipo = $2`,[date, 1]);
+        AND id_tipo = $2 AND estatus = $3`,[date, 1, true]);
 
     if (resultsFound.rows.length <= 0) {
       return res.status(400).json("No se encontraron resultados");

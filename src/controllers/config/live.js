@@ -18,7 +18,7 @@ export const createLiveRequest = async (req, res) => {
     }
 
     try {
-      const { title, description, idTipo } = req.body;
+      const { title, description, idTipo, estado } = req.body;
       const media = req.files;
 
       const id_tipo = parseInt(idTipo, 10);
@@ -34,7 +34,7 @@ export const createLiveRequest = async (req, res) => {
               (id_tipo, title, descripcion,  id_user, date_create, date_update, estatus)
               VALUES ($1, $2, $3, $4, $5, $6, $7)
               RETURNING id, date_create`,
-        [id_tipo, title, description, req.user.id, fecha, fecha, true]
+        [id_tipo, title, description, req.user.id, fecha, fecha, estado]
       );
 
       const { id, date_create } = result.rows[0];
@@ -87,7 +87,7 @@ export const getPartidosLive = async (req, res) => {
                tm.estatus
         FROM work.cfg_transmision_manual tm
         JOIN work.ref_tipo_transmision_manual ttm ON ttm.id = tm.id_tipo
-        WHERE tm.id_tipo = 2
+        WHERE tm.id_tipo = 2 AND tm.estatus = true
         ORDER BY tm.date_create DESC
         LIMIT 3;
       `);
@@ -159,7 +159,7 @@ export const getTotalStreemRequest = async (req, res) => {
     const resultsFound = await pool.query(
       `SELECT * FROM work.cfg_transmision_manual 
         WHERE date_create::date = $1::date
-        AND id_tipo = $2`,[formattedDate, 2]);
+        AND id_tipo = $2 AND estatus = $3`,[formattedDate, 2, true] );
 
     if (resultsFound.rows.length <= 0) {
       return res.status(400).json("No se encontraron resultados");
@@ -220,7 +220,7 @@ export const getStreemDateRequest = async (req, res) => {
     const resultsFound = await pool.query(
       `SELECT * FROM work.cfg_transmision_manual 
         WHERE date_create::date = $1::date
-        AND id_tipo = $2`,[date, 2]);
+        AND id_tipo = $2 AND estatus = $3`,[date, 2, true]);
 
     if (resultsFound.rows.length <= 0) {
       return res.status(400).json("No se encontraron resultados");
