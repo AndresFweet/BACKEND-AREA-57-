@@ -145,21 +145,11 @@ export const getPartidosLive = async (req, res) => {
 
 export const getTotalStreemRequest = async (req, res) => {
   try {
-    const now = new Date();
-    const today = new Intl.DateTimeFormat("es-CO", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      timeZone: "America/Bogota",
-    }).format(now);
-
-    const [day, month, year] = today.split("/");
-    const formattedDate = `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
+    
 
     const resultsFound = await pool.query(
       `SELECT * FROM work.cfg_transmision_manual 
-        WHERE date_create::date = $1::date
-        AND id_tipo = $2 AND estatus = $3`,[formattedDate, 2, true] );
+        WHERE id_tipo = $1 AND estatus = $2  ORDER BY date_create DESC LIMIT 12`,[2, true] );
 
     if (resultsFound.rows.length <= 0) {
       return res.status(400).json("No se encontraron resultados");
@@ -272,3 +262,4 @@ export const getStreemDateRequest = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 }
+

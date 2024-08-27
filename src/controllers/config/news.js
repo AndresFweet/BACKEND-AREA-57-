@@ -110,7 +110,7 @@ export const getNewsRandom = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que la primera imagen en la carpeta es la que necesitas
             const firstImageFile = files[0];
-            imageUrl = `${process.env.FRONTEND_URL}/uploads/${folderName}/${firstImageFile}`;
+            imageUrl = `${process.env.FRONTEND_URL }/uploads/${folderName}/${firstImageFile}`;
           }
         } catch (err) {
           console.error(

@@ -1,4 +1,4 @@
 node_modules
 .env.development
-.uploads
+.uploads/streem
 .env
