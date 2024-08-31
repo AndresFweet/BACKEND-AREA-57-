@@ -79,7 +79,8 @@ export const getPartidosLive = async (req, res) => {
     const resultsFound = await pool.query(`
         SELECT id,
                title,
-               descripcion
+               descripcion,
+               date_create
         FROM work.cfg_transmision_manual
         WHERE id_tipo = 2 AND estatus = true
         ORDER BY date_create DESC
