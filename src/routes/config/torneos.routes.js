@@ -8,6 +8,7 @@ import {
   getTipoDeporteRequest,
   createNewCampeonatoRequest,
   searchCampeonatosRequest,
+  getTorneoRequest,
 } from "../../controllers/config/torneos.js";
 
 const router = Router();
@@ -22,6 +23,8 @@ router.post(
   createNewCampeonatoRequest
 );
 
-router.get("/confg/searchTorneos", authRequired, searchCampeonatosRequest);
+router.post("/confg/searchTorneos", authRequired, searchCampeonatosRequest);
+
+router.get("/config/getTorneo/:id", authRequired, getTorneoRequest)
 
 export default router;

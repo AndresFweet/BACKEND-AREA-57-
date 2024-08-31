@@ -77,18 +77,12 @@ export const getPartidosLive = async (req, res) => {
   try {
     // Consulta para obtener videos
     const resultsFound = await pool.query(`
-        SELECT tm.id,
-               ttm.name AS tipo, 
-               tm.title,
-               tm.descripcion,
-               tm.id_user,
-               tm.date_create,
-               tm.date_update,
-               tm.estatus
-        FROM work.cfg_transmision_manual tm
-        JOIN work.ref_tipo_transmision_manual ttm ON ttm.id = tm.id_tipo
-        WHERE tm.id_tipo = 2 AND tm.estatus = true
-        ORDER BY tm.date_create DESC
+        SELECT id,
+               title,
+               descripcion
+        FROM work.cfg_transmision_manual
+        WHERE id_tipo = 2 AND estatus = true
+        ORDER BY date_create DESC
         LIMIT 3;
       `);
 
@@ -208,7 +202,7 @@ export const getStreemDateRequest = async (req, res) => {
     const date = req.params.date;
 
     const resultsFound = await pool.query(
-      `SELECT * FROM work.cfg_transmision_manual 
+      `SELECT id, title, descripcion  FROM work.cfg_transmision_manual 
         WHERE date_create::date = $1::date
         AND id_tipo = $2 AND estatus = $3`,[date, 2, true]);
 
