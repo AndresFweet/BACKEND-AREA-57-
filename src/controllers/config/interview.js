@@ -10,19 +10,14 @@ export const getInteviewRequest = async (req, res) => {
   try {
     // Consulta para obtener videos
     const resultsFound = await pool.query(`
-        SELECT tm.id,
-               ttm.name AS tipo, 
-               tm.title,
-               tm.descripcion,
-               tm.id_user,
-               tm.date_create,
-               tm.date_update,
-               tm.estatus
-        FROM work.cfg_transmision_manual tm
-        JOIN work.ref_tipo_transmision_manual ttm ON ttm.id = tm.id_tipo
-        WHERE tm.id_tipo = 1 AND tm.estatus = true
-        ORDER BY tm.date_create DESC
-        LIMIT 9;
+        SELECT id, 
+               title,
+               descripcion,
+               date_create
+        FROM work.cfg_transmision_manual
+        WHERE id_tipo = 1 AND estatus = true
+        ORDER BY date_create DESC
+        LIMIT 3;
       `);
 
     if (resultsFound.rows.length <= 0) {
