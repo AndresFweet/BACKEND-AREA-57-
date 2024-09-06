@@ -14,7 +14,7 @@ export const getInteviewRequest = async (req, res) => {
                title,
                descripcion,
                date_create
-        FROM work.cfg_transmision_manual
+        FROM work.cfg_gestion_media
         WHERE id_tipo = 1 AND estatus = true
         ORDER BY date_create DESC
         LIMIT 3;

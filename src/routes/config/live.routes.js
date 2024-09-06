@@ -14,7 +14,7 @@ const router = Router();
 
 router.post("/config/liveStatic", authRequired, createLiveRequest);
 
-router.get("/config/getLiveStatic", getPartidosLive);
+//router.get("/config/getLiveStatic", getPartidosLive);
 
 router.get("/config/getTotalStreem", getTotalStreemRequest);
 

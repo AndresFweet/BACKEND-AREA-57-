@@ -16,7 +16,7 @@ export const getRecordedRequest = async (req, res) => {
         const id = req.params.id;
     
         const resultsFound = await pool.query(
-          `SELECT * FROM work.cfg_transmision_manual 
+          `SELECT * FROM work.cfg_gestion_media
             WHERE id = $1`, [id]);
     
         if (resultsFound.rows.length <= 0) {
@@ -46,7 +46,7 @@ export const getRecordedRequest = async (req, res) => {
               if (files.length > 0) {
                 // Suponiendo que el primer video en la carpeta es el que necesitas
                 const firstVideoFile = files[0];
-                videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
+                videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/video.mp4`;
               }
             } catch (err) {
               console.error(

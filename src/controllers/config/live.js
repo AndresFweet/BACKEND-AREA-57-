@@ -27,7 +27,7 @@ export const createLiveRequest = async (req, res) => {
         return res.status(400).json({ message: "No se recibieron archivos." });
       }
 
-      const fecha = new Date ()
+      const fecha = new Date();
 
       const result = await pool.query(
         `INSERT INTO work.cfg_transmision_manual
@@ -81,7 +81,7 @@ export const getPartidosLive = async (req, res) => {
                title,
                descripcion,
                date_create
-        FROM work.cfg_transmision_manual
+        FROM work.cfg_gestion_contenido
         WHERE id_tipo = 2 AND estatus = true
         ORDER BY date_create DESC
         LIMIT 3;
@@ -101,7 +101,7 @@ export const getPartidosLive = async (req, res) => {
           __dirname,
           "../../..",
           "uploads",
-          "streem",
+          "stream",
           folderName
         ); // 'uploads/streem' está en la raíz
 
@@ -114,7 +114,7 @@ export const getPartidosLive = async (req, res) => {
           if (files.length > 0) {
             // Suponiendo que el primer archivo en la carpeta es el video que necesitas
             const firstVideoFile = files[0];
-            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/stream/${folderName}/${firstVideoFile}`;
           }
         } catch (err) {
           console.error(
@@ -140,11 +140,76 @@ export const getPartidosLive = async (req, res) => {
 
 export const getTotalStreemRequest = async (req, res) => {
   try {
-    
+    const resultsFound = await pool.query(
+      `SELECT gm.id, gm.title, gm.descripcion, gm.date_create,
+	  c.nombre_campeonato, j.nombre FROM work.cfg_gestion_media gm
+	  JOIN work.cfg_campeonatos c on c.id = gm.idtorneo
+	  JOIN work.cfg_jornadas j on j.id = gm.idjornada
+	  WHERE gm.id_tipo = 2 AND gm.estatus = true AND c.id_deporte = 1
+	  ORDER BY gm.date_create DESC
+	  LIMIT 12`);
+
+    if (resultsFound.rows.length <= 0) {
+      return res.status(400).json("No se encontraron resultados");
+    }
+
+    // Obtener las noticias y procesar los videos
+    const newsWithVideos = await Promise.all(
+      resultsFound.rows.map(async (news) => {
+        const { id, date_create } = news;
+        const dateFormatted = date_create.toISOString().slice(0, 10); // Formato: aaaa-mm-dd
+        const folderName = `${id}_${dateFormatted}`;
+        const videosFolderPath = path.join(
+          __dirname,
+          "../../..",
+          "uploads",
+          "stream",
+          folderName
+        ); // 'uploads/stream' está en la raíz
+
+        let videoUrl = null;
+
+        try {
+          // Leer el contenido de la carpeta de videos
+          const files = fs.readdirSync(videosFolderPath);
+
+          if (files.length > 0) {
+            // Suponiendo que el primer video en la carpeta es el que necesitas
+            const firstVideoFile = files[0];
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/stream/${folderName}/${firstVideoFile}`;
+          }
+        } catch (err) {
+          console.error(
+            `Error al leer la carpeta de videos para el ID ${id}:`,
+            err
+          );
+        }
+
+        // Devolver el registro de noticias con la URL del video
+        return {
+          ...news,
+          videoUrl,
+        };
+      })
+    );
+
+    res.status(200).json(newsWithVideos);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+export const getStreemDateRequest = async (req, res) => {
+  try {
+    const date = req.params.date;
 
     const resultsFound = await pool.query(
-      `SELECT * FROM work.cfg_transmision_manual 
-        WHERE id_tipo = $1 AND estatus = $2  ORDER BY date_create DESC LIMIT 12`,[2, true] );
+      `SELECT id, title, descripcion  FROM work.cfg_transmision_manual 
+        WHERE date_create::date = $1::date
+        AND id_tipo = $2 AND estatus = $3`,
+      [date, 2, true]
+    );
 
     if (resultsFound.rows.length <= 0) {
       return res.status(400).json("No se encontraron resultados");
@@ -196,65 +261,3 @@ export const getTotalStreemRequest = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
-
-export const getStreemDateRequest = async (req, res) => {
-  try {
-    
-    const date = req.params.date;
-
-    const resultsFound = await pool.query(
-      `SELECT id, title, descripcion  FROM work.cfg_transmision_manual 
-        WHERE date_create::date = $1::date
-        AND id_tipo = $2 AND estatus = $3`,[date, 2, true]);
-
-    if (resultsFound.rows.length <= 0) {
-      return res.status(400).json("No se encontraron resultados");
-    }
-
-    // Obtener las noticias y procesar los videos
-    const newsWithVideos = await Promise.all(
-      resultsFound.rows.map(async (news) => {
-        const { id, date_create } = news;
-        const dateFormatted = date_create.toISOString().slice(0, 10); // Formato: aaaa-mm-dd
-        const folderName = `${id}_${dateFormatted}`;
-        const videosFolderPath = path.join(
-          __dirname,
-          "../../..",
-          "uploads",
-          "streem",
-          folderName
-        ); // 'uploads/stream' está en la raíz
-
-        let videoUrl = null;
-
-        try {
-          // Leer el contenido de la carpeta de videos
-          const files = fs.readdirSync(videosFolderPath);
-
-          if (files.length > 0) {
-            // Suponiendo que el primer video en la carpeta es el que necesitas
-            const firstVideoFile = files[0];
-            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
-          }
-        } catch (err) {
-          console.error(
-            `Error al leer la carpeta de videos para el ID ${id}:`,
-            err
-          );
-        }
-
-        // Devolver el registro de noticias con la URL del video
-        return {
-          ...news,
-          videoUrl,
-        };
-      })
-    );
-
-    res.status(200).json(newsWithVideos);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-}
-

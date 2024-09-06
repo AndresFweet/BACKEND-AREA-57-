@@ -77,7 +77,8 @@ export const searchCampeonatosRequest = async (req, res) => {
 		   c.estado FROM work.cfg_campeonatos c
 		JOIN WORK.ref_deporte d on d.id = c.id_deporte
 		JOIN WORk.ref_tipo_campeonato tc on tc.id = c.id_tipo_campeonato
-	  WHERE c.nombre_campeonato ILIKE $1`,[`%${paramName}%`]
+	    WHERE c.nombre_campeonato ILIKE $1`,
+      [`%${paramName}%`]
     );
 
     if (resultsFound.rows <= 0) {
@@ -93,8 +94,76 @@ export const searchCampeonatosRequest = async (req, res) => {
 export const getTorneoRequest = async (req, res) => {
   try {
     const id = req.params.id;
-    
+    //realizar consulta a la base de datos
+    const resultsFound = await pool.query(
+      `SELECT * FROM work.cfg_campeonatos WHERE id = $1`,
+      [id]
+    );
+    //validar resultados encontrados
+    if (resultsFound.rows <= 0) {
+      return res.status(400).json("Error. No hay registros");
+    }
+
+    return res.status(200).json(resultsFound);
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+export const updateTorneoRequest = async (req, res) => {
+  try {
+    //parametro de idTorneo
+    const idTorneo = req.params.id;
+    // accede a la data enviada en el cuerpo de la solicitud
+    const { name, idTipo, idDeporte, descripcion, Estado } = req.body;
+    //ejecutar el script update
+    const result = await pool.query(
+      `UPDATE work.cfg_campeonatos
+     SET id_tipo_campeonato = $1,
+         id_deporte = $2,
+         nombre_campeonato = $3,
+         descripcion = $4,
+         id_usuario = $5,
+         date_update = $6,
+         estado = $7
+         WHERE id = $8
+         RETURNING id, date_update`,
+      [
+        idTipo,
+        idDeporte,
+        name,
+        descripcion,
+        req.user.id,
+        new Date(),
+        Estado,
+        idTorneo,
+      ]
+    );
+    //validar registro
+    const { id, date_update } = result.rows[0];
+
+    if (id && date_update) {
+      return res.status(200).json("¡Registro actualizado exitosamente...!");
+    } else {
+      return res.status(500).json("Error al manejar archivos.");
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+export const getTorneosActivosRequest = async (req, res) => {
+  try {
+    const resultsFound = await pool.query(`SELECT id,nombre_campeonato FROM work.cfg_campeonatos WHERE estado = true`)
+  
+    if (resultsFound.rows <= 0) {
+      return res.status(400).json('No hay torneos activos')
+    }
+
+    return res.status(200).json(resultsFound)
+
+  } catch (error) {
+    return res.status(500).json('Error de servidor')
   }
 }
+  
