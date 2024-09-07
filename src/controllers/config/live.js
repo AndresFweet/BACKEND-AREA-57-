@@ -163,20 +163,18 @@ export const getTotalStreemRequest = async (req, res) => {
           __dirname,
           "../../..",
           "uploads",
-          "stream",
+          "streem",
           folderName
         ); // 'uploads/stream' está en la raíz
 
-        let videoUrl = null;
+        let bannerUrl = null;
 
         try {
           // Leer el contenido de la carpeta de videos
           const files = fs.readdirSync(videosFolderPath);
 
-          if (files.length > 0) {
-            // Suponiendo que el primer video en la carpeta es el que necesitas
-            const firstVideoFile = files[0];
-            videoUrl = `${process.env.FRONTEND_URL}/uploads/stream/${folderName}/${firstVideoFile}`;
+          if (files.includes("banner.webp")){
+            bannerUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/banner.webp}`;
           }
         } catch (err) {
           console.error(
@@ -188,7 +186,7 @@ export const getTotalStreemRequest = async (req, res) => {
         // Devolver el registro de noticias con la URL del video
         return {
           ...news,
-          videoUrl,
+          bannerUrl,
         };
       })
     );
