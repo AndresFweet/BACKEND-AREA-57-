@@ -174,7 +174,7 @@ export const getTotalStreemRequest = async (req, res) => {
           const files = fs.readdirSync(videosFolderPath);
 
           if (files.includes("banner.webp")){
-            bannerUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/banner.webp}`;
+            bannerUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/banner.webp`;
           }
         } catch (err) {
           console.error(
