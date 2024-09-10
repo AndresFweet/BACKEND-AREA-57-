@@ -73,7 +73,7 @@ export const getInteviewRequest = async (req, res) => {
 export const getTotalStreemRequest = async (req, res) => {
   try {
     const resultsFound = await pool.query(
-      `SELECT * FROM work.cfg_transmision_manual WHERE id_tipo = $1 AND estatus = $2 ORDER BY date_create DESC LIMIT 12`,
+      `SELECT * FROM work.cfg_gestion_media WHERE id_tipo = $1 AND estatus = $2 ORDER BY date_create DESC LIMIT 12`,
       [1, true]
     );
 
@@ -102,9 +102,7 @@ export const getTotalStreemRequest = async (req, res) => {
           const files = fs.readdirSync(videosFolderPath);
 
           if (files.length > 0) {
-            // Suponiendo que el primer video en la carpeta es el que necesitas
-            const firstVideoFile = files[0];
-            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
+            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/video.mp4`;
           }
         } catch (err) {
           console.error(
