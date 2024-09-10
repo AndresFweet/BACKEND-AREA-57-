@@ -38,16 +38,15 @@ export const getInteviewRequest = async (req, res) => {
           folderName
         ); // 'uploads/streem' está en la raíz
 
-        let videoUrl = null;
+        let imageUrl = null;
 
         try {
           // Leer el contenido de la carpeta de videos
           const files = fs.readdirSync(videosFolderPath);
 
-          if (files.length > 0) {
+          if (files.includes("banner.webp")) {
             // Suponiendo que el primer archivo en la carpeta es el video que necesitas
-            const firstVideoFile = files[0];
-            videoUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/${firstVideoFile}`;
+            imageUrl = `${process.env.FRONTEND_URL}/uploads/streem/${folderName}/banner.webp`;
           }
         } catch (err) {
           console.error(
@@ -59,7 +58,7 @@ export const getInteviewRequest = async (req, res) => {
         // Devolver el registro de videos con la URL del video
         return {
           ...video,
-          videoUrl,
+          imageUrl,
         };
       })
     );

@@ -117,3 +117,11 @@ export const getJornadasByIdTorneroRequest = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+
+export const getTotalJornadasByTorneoRequest = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    return res.status(500).json('Error de servidor...')
+  }
+}

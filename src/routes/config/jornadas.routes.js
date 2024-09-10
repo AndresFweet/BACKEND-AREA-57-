@@ -15,4 +15,6 @@ router.put("/config/updateJornada/:id", authRequired, updateJornadaRequest)
 
 router.get("/config/getJornadasByIdTornero/:idTorneo", getJornadasByIdTorneroRequest )
 
+router.get("/config/getTotalJornadasByTorneo/:id", )
+
 export default router;

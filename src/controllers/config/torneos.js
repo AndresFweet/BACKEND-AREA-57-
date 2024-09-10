@@ -154,16 +154,32 @@ export const updateTorneoRequest = async (req, res) => {
 
 export const getTorneosActivosRequest = async (req, res) => {
   try {
-    const resultsFound = await pool.query(`SELECT id,nombre_campeonato FROM work.cfg_campeonatos WHERE estado = true`)
-  
+    const resultsFound = await pool.query(
+      `SELECT id,nombre_campeonato FROM work.cfg_campeonatos WHERE estado = true`
+    );
+
     if (resultsFound.rows <= 0) {
-      return res.status(400).json('No hay torneos activos')
+      return res.status(400).json("No hay torneos activos");
+    }
+
+    return res.status(200).json(resultsFound);
+  } catch (error) {
+    return res.status(500).json("Error de servidor");
+  }
+};
+
+export const getTotalTorneosFutbolRequest = async (req, res) => {
+  try {
+    const resultsFound = await pool.query(
+      `SELECT id, nombre_campeonato, date_create FROM work.cfg_campeonatos WHERE id_deporte = 1`
+    );
+    if (resultsFound.rows <= 0) {
+      return res.status(400).json('No se encontraron resultados')
     }
 
     return res.status(200).json(resultsFound)
 
   } catch (error) {
-    return res.status(500).json('Error de servidor')
+    return res.status(500).json('Error de servidor...')
   }
-}
-  
+};

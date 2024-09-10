@@ -11,6 +11,7 @@ import {
   getTorneoRequest,
   updateTorneoRequest,
   getTorneosActivosRequest,
+  getTotalTorneosFutbolRequest,
 } from "../../controllers/config/torneos.js";
 
 const router = Router();
@@ -33,5 +34,7 @@ router.get("/config/getTorneo/:id", authRequired, getTorneoRequest)
 router.put("/config/updateTorneo/:id", authRequired, updateTorneoRequest)
 
 router.get("/config/getTorneosActivos", authRequired, getTorneosActivosRequest)
+
+router.get("/config/getTotalTorneosFutbol", getTotalTorneosFutbolRequest)
 
 export default router;
