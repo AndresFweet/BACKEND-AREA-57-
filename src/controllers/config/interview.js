@@ -73,7 +73,7 @@ export const getInteviewRequest = async (req, res) => {
 export const getTotalStreemRequest = async (req, res) => {
   try {
     const resultsFound = await pool.query(
-      `SELECT * FROM work.cfg_gestion_media WHERE id_tipo = $1 AND estatus = $2 ORDER BY date_create DESC LIMIT 12`,
+      `SELECT * FROM work.cfg_  gestion_media WHERE id_tipo = $1 AND estatus = $2 ORDER BY date_create DESC LIMIT 12`,
       [1, true]
     );
 

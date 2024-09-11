@@ -9,7 +9,6 @@ import {
   getElementMediaRequest,
   updateElementMediaRequest
 } from "../../controllers/global/media.js";
-
 const router = Router();
 
 router.get("/media/getTipoMedia", authRequired, getTipoMediaRequest);
@@ -25,5 +24,7 @@ router.post(
 router.get("/media/getElementMedia/:id", authRequired,  getElementMediaRequest)
 
 router.put("/media/updateElementMedia/:id", authRequired, updateElementMediaRequest)
+
+//router.get("/media/getElementMediaFutbolByTorneo/:id", getElementMediaByTorneoRequest)
 
 export default router;

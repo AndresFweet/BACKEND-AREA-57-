@@ -120,7 +120,16 @@ export const getJornadasByIdTorneroRequest = async (req, res) => {
 
 export const getTotalJornadasByTorneoRequest = async (req, res) => {
   try {
-    
+    const idTorneo = req.params.id;
+    //realizar consulta a la base de datos
+    const resultsFound = await pool.query(`SELECT * FROM work.cfg_jornadas WHERE id_campeonato = $1`, [idTorneo])
+    //validar resultados encontrados
+    if(resultsFound.rows <= 0){
+      return res.status(400).json('No se encontraron resultados...')
+    }
+
+    return res.status(200).json(resultsFound)
+
   } catch (error) {
     return res.status(500).json('Error de servidor...')
   }
