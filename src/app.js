@@ -23,6 +23,9 @@ import JornadaRoutes from './routes/config/jornadas.routes.js'
 
 import MediaRoutes from './routes/global/media.routes.js'
 import SeccionFutRoutes from './routes/global/seccionFut.routes.js'
+
+import SportRoutes from './routes/global/sports.routes.js'
+
 // Necesario para resolver __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,4 +71,7 @@ app.use("/api", JornadaRoutes)
 app.use("/api", MediaRoutes)
 //seccion HOME (para enlistar los 3 partidos masrecientes)
 app.use("/api", SeccionFutRoutes)
+//secion HOME (para enlistar 3 encuentros de otras disciplinas)
+app.use("/api", SportRoutes)
+
 export default app;
