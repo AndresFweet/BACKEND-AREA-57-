@@ -22,8 +22,7 @@ export const createNewMediaRequest = async (req, res) => {
     }
 
     try {
-      const { title, idTipo, idTorneo, idJornada, description, Estado } =
-        req.body;
+      const { title, idTipo, idTorneo, idJornada, description, Estado } = req.body;
       const { banner, video } = req.files;
 
       const id_tipo = parseInt(idTipo, 10);
